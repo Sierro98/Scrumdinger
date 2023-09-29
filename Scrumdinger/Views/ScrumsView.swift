@@ -14,6 +14,11 @@ struct ScrumsView: View {
     @State
     private var isPresentingNewScrum: Bool = false
     
+    @Environment(\.scenePhase)
+    private var scenePhase
+    
+    let saveAction: () -> Void
+    
     var body: some View {
         NavigationStack {
             List($scrums) { $scrum in
@@ -34,6 +39,9 @@ struct ScrumsView: View {
                 }
                 .accessibilityLabel("Add new Scrum")
             }
+        }
+        .onChange(of: scenePhase) { phase in
+            if(phase == .inactive) { saveAction() }
         }
     }
 }
