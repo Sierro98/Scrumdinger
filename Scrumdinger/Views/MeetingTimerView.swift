@@ -12,8 +12,6 @@ struct MeetingTimerView: View {
     
     let theme: Theme
     
-    private var currIndex: Int
-    
     private var currentSpeaker: String {
         speakers.first(where: { !$0.isCompleted })?.name ?? "Someone"
     }
@@ -33,9 +31,7 @@ struct MeetingTimerView: View {
             .overlay {
                 ForEach(speakers) { speaker in
                     if speaker.isCompleted, let index = speakers.firstIndex(where: { $0.id == speaker.id }) {
-                        let _ = print(speakers)
-                        let _ = print(speaker.name, speaker.isCompleted)
-                        SpeakerArc(totalSpeakers: speakers.count, speakerIndex: index)
+                        SpeakerArc(speakerIndex: index, totalSpeakers: speakers.count)
                             .rotation(Angle(degrees: -90))
                             .stroke(theme.mainColor, lineWidth: 12.0)
                     }
