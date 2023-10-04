@@ -12,6 +12,12 @@ struct MeetingView: View {
     @StateObject
     var scrumTimer: ScrumTimer = ScrumTimer()
     
+    @StateObject
+    var speechRecognizer: SpeechRecognizer = SpeechRecognizer()
+    
+    @State
+    private var isRecording: Bool = false
+    
     private var player: AVPlayer { AVPlayer.sharedDingPlayer }
     
     var body: some View {
@@ -22,7 +28,7 @@ struct MeetingView: View {
                 MeetingHeaderView(secondsElapsed: $scrumTimer.secondsElapsed,
                                   secondsRemaining: $scrumTimer.secondsRemaining,
                                   theme: scrum.theme)
-                MeetingTimerView(speakers: scrumTimer.speakers, theme: scrum.theme)
+                MeetingTimerView(speakers: scrumTimer.speakers, isRecording: isRecording, theme: scrum.theme)
                 MeetingFooterView(speakers: scrumTimer.speakers, skipAction: scrumTimer.skipSpeaker)
             }
             .padding()
@@ -44,12 +50,17 @@ struct MeetingView: View {
             player.seek(to: .zero)
             player.play()
         }
+        speechRecognizer.resetTranscript()
+        speechRecognizer.startTranscribing()
+        isRecording = true
         scrumTimer.startScrum()
     }
     
     private func endScrum() {
+        speechRecognizer.stopTranscribing()
+        isRecording = false
         scrumTimer.stopScrum()
-        let newHistory = History(attendees: scrum.attendees)
+        let newHistory = History(attendees: scrum.attendees, transcript: speechRecognizer.transcript)
         scrum.history.insert(newHistory, at: 0)
     }
 }

@@ -114,6 +114,7 @@ actor SpeechRecognizer: ObservableObject {
         
         let request = SFSpeechAudioBufferRecognitionRequest()
         request.shouldReportPartialResults = true
+        request.requiresOnDeviceRecognition = true
         
         let audioSession = AVAudioSession.sharedInstance()
         try audioSession.setCategory(.playAndRecord, mode: .measurement, options: .duckOthers)
