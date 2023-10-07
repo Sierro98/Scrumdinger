@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MeetingFooterView: View {
-
+    
     var speakers: [ScrumTimer.Speaker]
     
     var skipAction: ()->Void
@@ -21,11 +21,7 @@ struct MeetingFooterView: View {
     private var isLastSpeaker: Bool {
         return speakers.dropLast().allSatisfy{ $0.isCompleted }
     }
-   
-    private var speakerText: String {
-        guard let speakerNumber = speakerNumber else { return "No more speakers" }
-        return "Speaker \(speakerNumber) of \(speakers.count)"
-    }
+    
     
     var body: some View {
         VStack {
@@ -33,7 +29,11 @@ struct MeetingFooterView: View {
                 if (isLastSpeaker) {
                     Text("Last Speaker")
                 } else {
-                    Text(speakerText)
+                    if let unwrappedSpeaker = speakerNumber {
+                        Text("Speaker \(unwrappedSpeaker) of \(speakers.count)")
+                    } else {
+                        Text("No more speakers")
+                    }
                     Spacer()
                     Button(action: skipAction) {
                         Image(systemName: "forward.fill")
