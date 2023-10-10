@@ -26,6 +26,16 @@ struct ScrumsView: View {
                     CardView(scrum: scrum)
                 }
                 .listRowBackground(scrum.theme.mainColor)
+                .swipeActions {
+                    Button(role: .destructive) {
+                        if let index = scrums.firstIndex(where: { $0.id == scrum.id }) {
+                            scrums.remove(at: index)
+                        }
+                    } label: {
+                        Label("Delete", systemImage: "trash")
+                    }
+                    
+                }
             }
             .sheet(isPresented: $isPresentingNewScrum) {
                 NewScrumSheet(isPresentingNewScrumView: $isPresentingNewScrum, scrums: $scrums)
